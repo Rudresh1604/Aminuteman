@@ -1,0 +1,7 @@
+Flask
+langchain
+langchain_huggingface
+langchain_core
+langchain_community
+python-dotenv
+flask-cors

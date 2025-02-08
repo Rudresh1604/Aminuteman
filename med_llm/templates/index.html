@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VALLEYMED</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Roboto';
+            background-color: #fac39b;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            font-size: 16px; /* Font size */
+        }
+        .container {
+            max-width: 1000px; /* Container width */
+            width: 100%;
+            background: linear-gradient(135deg, #f8f9fa, #e0e0e0);
+            border-radius: 10px;
+            padding: 30px; /* Padding */
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            height: 80%;
+            opacity: 0;
+            transform: translateX(-100%);
+            animation: slide-in 2s ease-in-out 3s forwards; /* Delayed animation */
+        }
+        .navbar {
+            justify-content: center;
+            text-align: center;
+        }
+        .navbar-brand {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            overflow: hidden; /* Hide overflow during transition */
+        }
+        .navbar-brand img {
+            margin-right: 10px;
+        }
+        .navbar-brand .tagline {
+            font-size: 1rem; /* Tagline font size */
+            color: #555;
+            margin-top: 10px; /* Margin-top */
+            opacity: 0; /* Initially hidden */
+            transform: translateX(-100%); /* Start position off-screen */
+            animation: slide-in 2s ease-in-out 1s forwards; /* Animation */
+        }
+        #meddolinna {
+            font-size: 2rem; /* Font size for Meddollinna */
+            font-weight: 700;
+            opacity: 0; /* Initially hidden */
+            transform: translateX(-100%); /* Start position off-screen */
+            animation: slide-in 2s ease-in-out forwards; /* Animation */
+        }
+        .catchy-lines {
+            font-size: 0.9rem;
+            color: #333;
+            margin-top: 15px;
+            opacity: 0;
+            transform: translateX(-100%);
+            animation: slide-in 2s ease-in-out 1.5s forwards;
+        }
+        .feature-image {
+            
+            margin-top: 20px;
+            opacity: 0;
+            transform: translateX(-100%);
+            animation: slide-in 2s ease-in-out 2.5s forwards; /* Animation delay */
+        }
+        @keyframes slide-in {
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        #messages {
+            flex-grow: 1;
+            overflow-y: auto;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+        .message {
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: flex-start;
+        }
+        .message.user {
+            justify-content: flex-end;
+        }
+        .message-content {
+            max-width: 70%;
+            padding: 12px; /* Message content padding */
+            border-radius: 5px;
+            background-color: #e0e0e0;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .message.bot .message-content {
+            background-color: #fa4205;
+            color: #fff;
+        }
+        .input-group {
+            display: flex;
+        }
+        .input-group input {
+            flex-grow: 1;
+        }
+        .loader-container {
+            display: none;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+        }
+        .loader {
+            border: 4px solid #f3f3f3;
+            border-radius: 50%;
+            border-top: 4px solid #007bff;
+            width: 20px;
+            height: 20px;
+            animation: spin 2s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar bg-body-tertiary">
+        <div class="container-fluid d-flex justify-content-center">
+            <a class="navbar-brand">
+                <img src="static/logo.jpg" alt="Logo" width="100" height="100" class="d-inline-block align-text-top">
+                <span class="global-text">AMINUTEMAN</span>
+                
+                <div id="meddolinna">Valley AI</div>
+                <div class="tagline">Your go-to AI companion for medical queries and insights.</div>
+                <div class="catchy-lines">
+                    "Bridging the gap between doubt and diagnosis." <br>
+                    "Empowering students and professionals with instant clarity."
+                </div>
+                <!-- Add the feature image here -->
+                <img src="static/health.png" alt="Feature Image" width="300" height="150" class="feature-image">
+            </a>
+        </div>
+    </nav>
+    
+    <div class="container">
+        <div id="messages">
+            <!-- Messages will be appended here -->
+        </div>
+        <div class="input-group">
+            <input type="text" id="user-input" class="form-control" placeholder="Type your message...">
+            <div class="input-group-append">
+                <button class="btn btn-primary" id="send-btn">Send</button>
+                <div class="loader-container">
+                    <div class="loader"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- jQuery and Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+    <script>
+        $(document).ready(function(){
+            $('#send-btn').on('click', function(){
+                const userInput = $('#user-input').val();
+                if(userInput) {
+                    $('#messages').append(
+                        '<div class="message user"><div class="message-content">' + userInput + '</div></div>'
+                    );
+                    $('#user-input').val('');
+                    $('.loader-container').show();
+                    $.ajax({
+                        url: '/ask',
+                        method: 'POST',
+                        data: { question: userInput },
+                        success: function(data) {
+                            $('#messages').append(
+                                '<div class="message bot"><div class="message-content">' + data.answer + '</div></div>'
+                            );
+                            $('.loader-container').hide();
+                            $('#messages').scrollTop($('#messages')[0].scrollHeight);  // Scroll to the bottom
+                        },
+                        error: function() {
+                            $('#messages').append(
+                                '<div class="message bot"><div class="message-content"><strong>Error:</strong> Something went wrong.</div></div>'
+                            );
+                            $('.loader-container').hide();
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
